@@ -61,3 +61,27 @@ function Install-Modules {
 
 
 Install-Modules
+
+
+
+
+
+# ここから実処理
+
+# 事前準備（認証情報を事前にファイルに書き出しておく）
+$credentialPath = "C:\Users\<EXAMPLE>\Desktop\credential.dat"
+$username = "admin@EXAMPLE.onmicrosoft.com"
+$tmpCred = Get-Credential
+$tmpCred.Password | ConvertFrom-SecureString | Set-Content $credentialPath
+
+
+
+# サインイン
+# $username = "admin@EXAMPLE.onmicrosoft.com"
+$password = Get-Content $credentialPath | ConvertTo-SecureString
+$credential = New-Object System.Management.Automation.PsCredential $username, $password
+$session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $credential -Authentication Basic -AllowRedirection
+Import-PSSession $session -DisableNameChecking
+
+# サインインできたことを確認
+Get-User $username | FL
