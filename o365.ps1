@@ -98,3 +98,18 @@ Connect-ExchangeOnline -Credential $credential
 
 # サインインできたことを確認
 Get-User $username | FL
+
+# メールボックスを取得
+Get-EXOMailbox -ResultSize unlimited -Identity $username
+
+Get-EXOMailboxPermission -Identity $username
+
+# Get-EXOMailboxFolderStatistics -Identity $username -FolderScope Calendar -IncludeOldestAndNewestItems | FL Name
+Get-EXOMailboxFolderPermission -Identity ${username}:\予定表
+
+Get-EXOMailbox -ResultSize Unlimited | Get-EXOMailboxFolderStatistics -FolderScope Inbox | Format-Table Identity,ItemsInFolderAndSubfolders,FolderAndSubfolderSize -AutoSize
+
+Get-EXORecipient -ResultSize 10
+Get-EXORecipient -Identity $username
+
+Get-EXORecipientPermission -Identity $username
