@@ -8,6 +8,7 @@ function Install-AzureADModule {
 
 function Install-SPOModule {
     Install-Module -Name Microsoft.Online.SharePoint.PowerShell -Force -AllowClobber
+    Install-Module -Name SharePointPnPPowerShellOnline -Force -AllowClobber
     Write-Host "SPO module has been installed"
 }
 
@@ -25,7 +26,7 @@ function Get-Config {
     $Path = "settings.ini"
 
     $Config = @{}
-    Get-Content $Path | %{ $Config += ConvertFrom-StringData $_ }
+    Get-Content $Path | % { $Config += ConvertFrom-StringData $_ }
 
     return $Config
 }
@@ -93,7 +94,7 @@ $credentialPath = $Config.CREDENTIAL_PATH
 $username = $Config.USERNAME
 
 $password = Get-Content $credentialPath | ConvertTo-SecureString
-$credential = New-Object System.Management.Automation.PsCredential $username,$password
+$credential = New-Object System.Management.Automation.PsCredential $username, $password
 Connect-ExchangeOnline -Credential $credential
 
 # サインインできたことを確認
@@ -107,7 +108,7 @@ Get-EXOMailboxPermission -Identity $username
 # Get-EXOMailboxFolderStatistics -Identity $username -FolderScope Calendar -IncludeOldestAndNewestItems | FL Name
 Get-EXOMailboxFolderPermission -Identity ${username}:\予定表
 
-Get-EXOMailbox -ResultSize Unlimited | Get-EXOMailboxFolderStatistics -FolderScope Inbox | Format-Table Identity,ItemsInFolderAndSubfolders,FolderAndSubfolderSize -AutoSize
+Get-EXOMailbox -ResultSize Unlimited | Get-EXOMailboxFolderStatistics -FolderScope Inbox | Format-Table Identity, ItemsInFolderAndSubfolders, FolderAndSubfolderSize -AutoSize
 
 Get-EXORecipient -ResultSize 10
 Get-EXORecipient -Identity $username
