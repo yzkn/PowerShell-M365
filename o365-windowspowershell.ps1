@@ -126,3 +126,5 @@ Get-AdminPowerAppEnvironment
 Get-AdminPowerAppEnvironment –Default
 # 環境のGUIDから
 Get-AdminPowerAppEnvironment –EnvironmentName 'Default-********-****-****-****-************'
+
+Pause

@@ -81,11 +81,12 @@ Install-Modules
 # 事前準備（認証情報を事前にファイルに書き出しておく）
 $Config = Get-Config
 $credentialPath = $Config.CREDENTIAL_PATH
-$username = $Config.USERNAME
+if (!(Test-Path $credentialPath)) {
+    $username = $Config.USERNAME
 
-$tmpCred = Get-Credential -Credential $username
-$tmpCred.Password | ConvertFrom-SecureString | Set-Content $credentialPath
-
+    $tmpCred = Get-Credential -Credential $username
+    $tmpCred.Password | ConvertFrom-SecureString | Set-Content $credentialPath
+}
 
 
 # サインイン
@@ -114,3 +115,5 @@ Get-EXORecipient -ResultSize 10
 Get-EXORecipient -Identity $username
 
 Get-EXORecipientPermission -Identity $username
+
+Pause
