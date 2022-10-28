@@ -1,8 +1,5 @@
 # Copyright (c) 2022 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
 
-# Required:
-#   Install-Module SharePointPnPPowerShellOnline
-
 
 $filename = "fields.csv"
 $siteUrl = "https://contoso.sharepoint.com/sites/ColumnsTestTeam"
