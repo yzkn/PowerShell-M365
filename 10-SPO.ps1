@@ -1,18 +1,50 @@
-# Copyright (c) 2022 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
+# Copyright (c) 2023 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
+
+
+.".\00-Util.ps1"
 
 
 $filename = "fields.csv"
-$siteUrl = "https://contoso.sharepoint.com/sites/ColumnsTestTeam"
-$list = "LIST_NAME"
+$siteUrl = "https://contoso.sharepoint.com/sites/contoso"
+$tenantAdministrationSiteUrl = "https://contoso-admin.sharepoint.com/"
+$listName = "Fabrikam"
 
 
-Connect-PnPOnline -Url $siteUrl
+# サインイン
+$Config = Get-Config
+$credentialPath = $Config.CREDENTIAL_PATH
+$username = $Config.USERNAME
 
-# サイト一覧
+$password = Get-Content $credentialPath | ConvertTo-SecureString
+$credential = New-Object System.Management.Automation.PsCredential $username, $password
+
+
+
+# SharePoint Online 管理シェル
+
+Connect-SPOService -Url $tenantAdministrationSiteUrl -credential $credential
+
+Write-Host "ユーザー一覧"
+Get-SPOUser -Site $siteUrl
+
+Write-Host "サイト一覧"
+Get-SPOSite -Limit ALL
+# Get-SPOSite -Identity $siteUrl
+
+
+# PnP PowerShell
+
+Connect-PnPOnline -Url $siteUrl -Credentials $credential
+
+Write-Host "ユーザー一覧"
+# Get-PnPUser
+Get-PnPUser | Where-Object Email -eq "admin@contoso.onmicrosoft.com"
+
+Write-Host "サイト一覧"
 Get-PnPWeb
 
-# リスト一覧
+Write-Host "リスト一覧"
 Get-PnPList
 
-# 列一覧
-Get-PnPField -List $list | Select-Object Title, InternalName, TypeDisplayName, Required, MaxLength, Hidden | Export-Csv -NoTypeInformation $filename -Encoding UTF8
+Write-Host "列一覧"
+Get-PnPField -List $listName | Select-Object Title, InternalName, TypeDisplayName, Required, MaxLength, Hidden | Export-Csv -NoTypeInformation $filename -Encoding UTF8

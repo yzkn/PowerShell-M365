@@ -1,4 +1,4 @@
-# Copyright (c) 2022 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
+# Copyright (c) 2023 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
 
 
 # 既にインストールされているかどうかに関わらずインストールする場合は$True
@@ -35,14 +35,8 @@ $moduleNamesDesktop = @(
 )
 
 
-function Get-Config {
-    $Path = "settings.ini"
+.".\00-Util.ps1"
 
-    $Config = @{}
-    Get-Content $Path | % { $Config += ConvertFrom-StringData $_ }
-
-    return $Config
-}
 
 function Pause {
     if ($psISE) {

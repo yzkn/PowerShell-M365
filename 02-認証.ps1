@@ -1,3 +1,6 @@
+.".\00-Util.ps1"
+
+
 # 事前準備（認証情報を事前にファイルに書き出しておく）
 $Config = Get-Config
 $credentialPath = $Config.CREDENTIAL_PATH
@@ -9,13 +12,12 @@ if (!(Test-Path $credentialPath)) {
 }
 
 
-# サインイン
+# $credentialを設定
 $Config = Get-Config
 $credentialPath = $Config.CREDENTIAL_PATH
 $username = $Config.USERNAME
 
 $password = Get-Content $credentialPath | ConvertTo-SecureString
 $credential = New-Object System.Management.Automation.PsCredential $username, $password
-Connect-AzureAD -Credential $Credential
 
 Pause

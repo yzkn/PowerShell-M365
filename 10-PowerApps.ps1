@@ -1,3 +1,6 @@
+.".\00-Util.ps1"
+
+
 $Config = Get-Config
 $credentialPath = $Config.CREDENTIAL_PATH
 $username = $Config.USERNAME
