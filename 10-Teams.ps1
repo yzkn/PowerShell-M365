@@ -34,5 +34,17 @@ Get-AssociatedTeam | ForEach-Object { Get-TeamUser -GroupId $_.GroupId }
 Write-Host "各チームのチャネル一覧"
 Get-AssociatedTeam | ForEach-Object { Get-TeamChannel -GroupId $_.GroupId }
 
+Get-AssociatedTeam | ForEach-Object {
+    $groupId = $_.GroupId
+
+    Write-Host $_.DisplayName " " $groupId
+
+    Get-TeamChannel -GroupId $groupId | ForEach-Object {
+        Write-Host $_.DisplayName
+
+        Get-TeamChannelUser -GroupId $groupId -DisplayName $_.DisplayName | FT
+    }
+}
+
 
 Pause

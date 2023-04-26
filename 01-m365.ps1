@@ -116,7 +116,12 @@ function Main {
         }
         else {
             # 新規に管理者権限で起動
-            Start-Process pwsh "-File `"$PSCommandPath`"" -Verb RunAs
+            if ($PSVersionTable['PSEdition'] -eq "Core") {
+                Start-Process pwsh.exe "-File `"$PSCommandPath`"" -Verb RunAs
+            }
+            else {
+                Start-Process powershell.exe "-File `"$PSCommandPath`"" -Verb RunAs
+            }
             exit
         }
     }
