@@ -1,13 +1,7 @@
 # Copyright (c) 2023 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
 
 
-.".\00-Util.ps1"
-
-
-$Config = Get-Config
-$credentialPath = $Config.CREDENTIAL_PATH
-$username = $Config.USERNAME
-$password = Get-Content $credentialPath | ConvertTo-SecureString
+.".\02-Auth.ps1"
 
 
 Write-Host "認証"

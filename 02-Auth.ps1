@@ -14,13 +14,14 @@ if (!(Test-Path $credentialPath)) {
     $tmpCred.Password | ConvertFrom-SecureString | Set-Content $credentialPath
 }
 
+if ($null -eq $credential) {
+    # $credentialを設定
+    $Config = Get-Config
+    $credentialPath = $Config.CREDENTIAL_PATH
 
-# $credentialを設定
-$Config = Get-Config
-$credentialPath = $Config.CREDENTIAL_PATH
-$username = $Config.USERNAME
-
-$password = Get-Content $credentialPath | ConvertTo-SecureString
-$credential = New-Object System.Management.Automation.PsCredential $username, $password
+    $username = $Config.USERNAME
+    $password = Get-Content $credentialPath | ConvertTo-SecureString
+    $credential = New-Object System.Management.Automation.PsCredential $username, $password
+}
 
 Pause

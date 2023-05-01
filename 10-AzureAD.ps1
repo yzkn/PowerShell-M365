@@ -1,24 +1,18 @@
 # Copyright (c) 2023 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
 
 
-.".\00-Util.ps1"
+.".\02-Auth.ps1"
 
 
-# サインイン
-$Config = Get-Config
-$credentialPath = $Config.CREDENTIAL_PATH
-$username = $Config.USERNAME
-
-$password = Get-Content $credentialPath | ConvertTo-SecureString
-$credential = New-Object System.Management.Automation.PsCredential $username, $password
-Connect-AzureAD -Credential $Credential
+Write-Host "認証"
+Connect-AzureAD -Credential $credential
 
 # サインインできたことを確認
 $Config = Get-Config
 $username = $Config.USERNAME
 (Get-AzureADUser -ObjectId $username) | Select-Object -Property Mail
 
-# ユーザーを検索
+Write-Host "ユーザーを検索"
 Get-AzureADUser -SearchString "Admin"
 
 Pause

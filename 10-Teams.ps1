@@ -1,16 +1,10 @@
 # Copyright (c) 2023 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
 
 
-.".\00-Util.ps1"
+.".\02-Auth.ps1"
 
 
 Write-Host "認証"
-$Config = Get-Config
-$credentialPath = $Config.CREDENTIAL_PATH
-$username = $Config.USERNAME
-
-$password = Get-Content $credentialPath | ConvertTo-SecureString
-$credential = New-Object System.Management.Automation.PsCredential $username, $password
 Connect-MicrosoftTeams -Credential $credential
 
 Write-Host "ユーザーに関連付けられたチームの一覧"

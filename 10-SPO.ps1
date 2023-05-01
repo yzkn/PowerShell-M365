@@ -1,7 +1,7 @@
 # Copyright (c) 2023 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
 
 
-.".\00-Util.ps1"
+.".\02-Auth.ps1"
 
 
 $filename = "fields.csv"
@@ -11,14 +11,6 @@ $listName = "Fabrikam"
 
 
 # サインイン
-$Config = Get-Config
-$credentialPath = $Config.CREDENTIAL_PATH
-$username = $Config.USERNAME
-
-$password = Get-Content $credentialPath | ConvertTo-SecureString
-$credential = New-Object System.Management.Automation.PsCredential $username, $password
-
-
 
 # SharePoint Online 管理シェル
 
