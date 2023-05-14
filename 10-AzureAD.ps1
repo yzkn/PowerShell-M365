@@ -16,3 +16,10 @@ Write-Host "ユーザーを検索"
 Get-AzureADUser -SearchString "Admin"
 
 Pause
+
+
+Write-Host "AzureAD Graph を使用してAAD内のグループを取得"
+Get-AzureADGroup -All:$true
+
+Write-Host "AADの外部で作成したMicrosoft 365グループのセキュリティを有効化"
+Set-AzureADGroup -ObjectId "ObjectID" -SecurityEnabled $True
