@@ -29,9 +29,27 @@
 | キャンバスアプリを共有する                                                                                                                     | セキュリティが有効なM365グループ                            | いいえ                                           | はい（AADセキュリティグループは可、オンプレミスは不可）        |                                                                                                        | いいえ                                                                                                           | いいえ                                                                           |
 |                                                                                                                                                |                                                             |                                                  |                                                                |                                                                                                        |                                                                                                                  |                                                                                  |
 
-- https://learn.microsoft.com/ja-jp/microsoft-365/admin/create-groups/compare-groups?view=o365-worldwide
+- https://learn.microsoft.com/ja-jp/microsoft-365/admin/create-groups/compare-groups
 - https://learn.microsoft.com/ja-jp/power-platform/admin/control-user-access
 - https://learn.microsoft.com/ja-jp/power-apps/maker/canvas-apps/share-app
+
+### M365グループ
+
+#### グループの制限
+
+| 項目                                   | 最大値                                                                          |
+| -------------------------------------- | ------------------------------------------------------------------------------- |
+| 1つのグループの所有者                  | 100                                                                             |
+| ユーザーが作成できるグループ           | 250                                                                             |
+| 管理者が作成できるグループ             | M365グループ固有の制限はなく、AADオブジェクトの制限までM365グループを作成できる |
+| メンバー数                             | 1,000を超えるが、同時にグループ会話にアクセスできるのは1,000 人のみ             |
+| ユーザーが所有できるグループの数       | 7,000                                                                           |
+| ユーザーがメンバーにできるグループの数 | 7,000                                                                           |
+| ファイルの記憶域                       | サブスクライブしたユーザーあたり 1TB + 10GB + 購入したその他のストレージ        |
+| グループメールボックスのサイズ         | 50GB                                                                            |
+
+- https://learn.microsoft.com/ja-JP/microsoft-365/admin/create-groups/office-365-groups
+- https://learn.microsoft.com/ja-jp/azure/active-directory/enterprise-users/directory-service-limits-restrictions
 
 ---
 
