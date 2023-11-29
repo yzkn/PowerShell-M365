@@ -1,35 +1,119 @@
 # Copyright (c) 2023 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
 
 
-.".\02-Auth.ps1"
+# 認証
 
+.".\02-Auth.ps1"
 
 Write-Host "認証"
 Add-PowerAppsAccount -Username $username -Password $password
 
 
-Write-Host "Power Appsユーザーの詳細のダウンロード"
-Get-AdminPowerAppsUserDetails -UserPrincipalName $username -OutputFilePath '.\adminUserDetails.txt'
-Write-Host "割り当てられたユーザーライセンスのリストをエクスポートする"
-Get-AdminPowerAppLicenses -OutputFilePath '.\licenses.csv'
-Write-Host "フローユーザーの詳細のダウンロード"
-Get-AdminFlowUserDetails –UserId $Global:currentSession.userId # $Global:currentSession.userId はユーザーのGUID
 
+
+
+# ライセンス管理・監査
+
+Write-Host "割り当てられたユーザーライセンス (Power Apps および Power Automate) の表をエクスポートする"
+Get-AdminPowerAppLicenses -OutputFilePath ".\licenses.csv"
+
+
+Write-Host "Power Appsユーザーの詳細のダウンロード"
+Get-AdminPowerAppsUserDetails -UserPrincipalName $username -OutputFilePath ".\adminUserDetails.txt"
+
+
+Write-Host "フローユーザーの詳細のダウンロード"
+Get-AdminFlowUserDetails -UserId $Global:currentSession.userId # $Global:currentSession.userId はログインユーザーのGUID
+
+
+
+
+
+# テナント
+
+Write-Host "テナント情報の取得"
+Get-TenantDetailsFromGraph
+<#
+ObjectType  : Company
+TenantId    : 12341234-1234-1234-1234-123412341234
+Country     : SG
+Language    : en
+DisplayName : MSFT
+Domains     : @{capabilities=Email, OfficeCommunicationsOnline; default=True; id=0123456789012345; initial=True; name=contoso.onmicrosoft.com; type=Managed}
+Internal    : ...
+#>
+
+
+Write-Host "テナント設定の取得"
+Get-TenantSettings
+<#
+walkMeOptOut                                   : False
+disableNPSCommentsReachout                     : False
+disableNewsletterSendout                       : False
+disableEnvironmentCreationByNonAdminUsers      : False
+disablePortalsCreationByNonAdminUsers          : False
+disableSurveyFeedback                          : False
+disableTrialEnvironmentCreationByNonAdminUsers : False
+disableCapacityAllocationByEnvironmentAdmins   : False
+disableSupportTicketsVisibleByAllUsers         : False
+powerPlatform                                  : ...
+#>
+
+
+
+
+
+# 環境
 
 Write-Host "環境一覧"
+
 Write-Host "    全ての環境"
 Get-AdminPowerAppEnvironment
+
 Write-Host "    既定環境"
 Get-AdminPowerAppEnvironment -Default
-# Write-Host "    環境のGUIDから"
-# Get-AdminPowerAppEnvironment –EnvironmentName 'Default-********-****-****-****-************'
 
+Write-Host "    環境のGUIDから"
+Get-AdminPowerAppEnvironment -EnvironmentName "Default-********-****-****-****-************"
+Get-AdminPowerAppEnvironment -EnvironmentName (Get-AdminPowerAppEnvironment -Default).EnvironmentName
+
+
+
+
+
+# Power Apps
+
+# キャンバスアプリ
 
 Write-Host "アプリ一覧"
 Write-Host "    テナント内の全てのアプリ"
 Get-AdminPowerApp
+<#
+EnvironmentName                            : 12341234-1234-1234-1234-123412341234
+DisplayName                                : YA (org12345678)
+Description                                :
+IsDefault                                  : False
+Location                                   : japan
+CreatedTime                                : 2023-11-07T00:06:28.6754489Z
+CreatedBy                                  : ...
+LastModifiedTime                           : 2023-11-07T00:06:38.4531374Z
+LastModifiedBy                             :
+CreationType                               : User
+EnvironmentType                            : Trial
+CommonDataServiceDatabaseProvisioningState : Succeeded
+CommonDataServiceDatabaseType              : Common Data Service for Apps
+Internal                                   : ...
+InternalCds                                :
+OrganizationId                             : 12341234-1234-1234-1234-123412341234
+RetentionPeriod                            : 7
+#>
+
+
 # Write-Host "    特定の環境に含まれるアプリ"
 # Get-AdminPowerAppEnvironment -EnvironmentName '17b630e0-****-****-****-************' | Get-AdminPowerApp
+
+# Write-Host "    入力された表示名と一致するすべての Power Apps の一覧"
+# Get-AdminPowerApp "表示名"
 
 Write-Host "    ユーザー毎の所有するアプリ数"
 Get-AdminPowerApp | Select-Object -ExpandProperty Owner | Select-Object -ExpandProperty displayname | Group-Object
@@ -43,6 +127,8 @@ Get-AdminDeletedPowerAppsList -EnvironmentName $defaultEnv.EnvironmentName
 # 削除されたキャンバスアプリを回復
 # Get-AdminRecoverDeletedPowerApp -AppName 'AppName' -EnvironmentName 'EnvironmentName'
 
+
+
 Write-Host "フロー一覧"
 Write-Host "    テナント内の全てのフロー"
 Get-AdminFlow
@@ -50,12 +136,19 @@ Get-AdminFlow
 # Get-AdminPowerAppEnvironment -EnvironmentName '17b630e0-****-****-****-************' | Get-AdminFlow
 Get-AdminFlow | Export-Csv -Path '.\FlowExport.csv'
 
-Write-Host "おすすめのアプリケーション"
-Get-AdminPowerApp 'ToDoリスト' | Select-Object -First 1 | Set-AdminPowerAppAsFeatured
+
+Write-Host "フロー所有者のロールの詳細"
+Get-AdminFlowOwnerRole -EnvironmentName "Guid" -FlowName "Guid"
 
 
-Write-Host "ヒーローアプリ（Power Appsモバイルプレーヤーのリストの一番上に表示される。ヒーローアプリは1つのみ）"
-Get-AdminPowerApp 'ToDoリスト' | Select-Object -First 1 | Set-AdminPowerAppAsHero
+
+Write-Host "おすすめのアプリケーションに設定"
+Get-AdminPowerApp "表示名" | Select-Object -First 1 | Set-AdminPowerAppAsFeatured
+# Set-AdminPowerAppAsFeatured -AppName "GUID"
+
+
+Write-Host "ヒーローアプリ（Power Appsモバイルプレーヤーのリストの一番上に表示される。ヒーローアプリは1つのみ）に設定"
+Get-AdminPowerApp "表示名" | Select-Object -First 1 | Set-AdminPowerAppAsHero
 
 
 Write-Host "キャンバスアプリのアクセス許可"
@@ -83,7 +176,7 @@ Get-AdminFlow | Select-Object -Last 1 | ForEach-Object {
 
 
 Write-Host "キャンバスアプリの所有者" # $user.ObjectId / $Global:currentSession.userId 両方ユーザーのGUID
-Set-AdminPowerAppOwner -AppOwner $user.ObjectId -EnvironmentName 'EnvironmentName' -AppName 'AppName'
+Set-AdminPowerAppOwner -AppOwner $user.ObjectId -EnvironmentName "GUID" -AppName "GUID"
 
 
 Write-Host "イン コンテキスト フロー とアプリの関連付け"
