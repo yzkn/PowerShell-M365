@@ -86,4 +86,25 @@ Write-Host "キャンバスアプリの所有者" # $user.ObjectId / $Global:cur
 Set-AdminPowerAppOwner -AppOwner $user.ObjectId -EnvironmentName 'EnvironmentName' -AppName 'AppName'
 
 
+Write-Host "イン コンテキスト フロー とアプリの関連付け"
+# クラウドフロー
+#     非ソリューション: https://preview.flow.microsoft.com/manage/environments/<EnvironmentName>/flows/<FlowName>/details
+#     ソリューション内: https://us.flow.microsoft.com/manage/environments/<EnvironmentName>/solutions/<SolutionName>/flows/<FlowName>/details
+# キャンバスアプリ: https://apps.powerapps.com/play/e/<EnvironmentName>/a/<AppName>?tenantId=<TenantId>
+Add-AdminFlowPowerAppContext -EnvironmentName "GUID" -FlowName "GUID" -AppName "GUID"
+
+Remove-AdminFlowPowerAppContext -EnvironmentName "GUID" -FlowName "GUID" -AppName "GUID"
+
+# 私の注意を必要とするフロー（テナント内の環境の数が 500 未満の場合）
+$environments = Get-AdminPowerAppEnvironment
+$allFlows = @()
+foreach ($env in $environments) {
+    Write-Host "Getting flows at risk of suspension for environment $($env.DisplayName)..."
+    $flows = Get-AdminFlowAtRiskOfSuspension -EnvironmentName $env.EnvironmentName
+    Write-Host "Found $($flows.Count) flows at risk of suspension."
+    $allFlows += $flows
+}
+$allFlows | Export-Csv -Path "flows.csv" -NoTypeInformation
+
+
 Pause
