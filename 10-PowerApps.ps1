@@ -200,4 +200,13 @@ foreach ($env in $environments) {
 $allFlows | Export-Csv -Path "flows.csv" -NoTypeInformation
 
 
+
+Write-Host "API接続一覧"
+Write-Host "    既定環境にあるネイティブ接続"
+Get-AdminPowerAppEnvironment -Default | Get-AdminPowerAppConnection
+
+Write-Host "    テナントにあるカスタムコネクタ（非ソリューションのみ）"
+Get-AdminPowerAppConnector
+
+
 Pause
