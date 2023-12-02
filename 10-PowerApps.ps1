@@ -77,6 +77,10 @@ Write-Host "    環境のGUIDから"
 Get-AdminPowerAppEnvironment -EnvironmentName "Default-********-****-****-****-************"
 Get-AdminPowerAppEnvironment -EnvironmentName (Get-AdminPowerAppEnvironment -Default).EnvironmentName
 
+Write-Host "    SharePoint カスタム フォーム環境"
+Get-AdminPowerAppSharepointFormEnvironment
+# Set-AdminPowerAppSharepointFormEnvironment -EnvironmentName "GUID"
+# Reset-AdminPowerAppSharepointFormEnvironment
 
 
 
@@ -121,7 +125,7 @@ Get-AdminPowerApp | Select-Object -ExpandProperty Owner | Select-Object -ExpandP
 Write-Host "    環境毎のアプリ数"
 Get-AdminPowerApp | Select-Object -ExpandProperty EnvironmentName | Group-Object | ForEach-Object { New-Object -TypeName PSObject -Property @{ DisplayName = (Get-AdminPowerAppEnvironment -EnvironmentName $_.Name | Select-Object -ExpandProperty displayName); Count = $_.Count } }
 
-Write-Host "    環境で削除されたキャンバス アプリのリスト"
+Write-Host "    既定環境で削除されたキャンバス アプリのリスト"
 $defaultEnv = Get-AdminPowerAppEnvironment -Default
 Get-AdminDeletedPowerAppsList -EnvironmentName $defaultEnv.EnvironmentName
 # 削除されたキャンバスアプリを回復
